@@ -1,0 +1,173 @@
+version: 6.48.15
+
+type: DeclarativeSource
+
+check:
+  type: CheckStream
+  stream_names:
+    - historical_weather_nyc
+
+definitions:
+  streams:
+    historical_weather_nyc:
+      type: DeclarativeStream
+      name: historical_weather_nyc
+      retriever:
+        type: SimpleRetriever
+        decoder:
+          type: JsonDecoder
+        requester:
+          $ref: "#/definitions/base_requester"
+          path: /
+          http_method: GET
+          request_parameters:
+            daily: >-
+              temperature_2m_min,temperature_2m_max,relative_humidity_2m_max,precipitation_sum,rain_sum,snowfall_sum,wind_speed_10m_max,weather_code
+            end_date: "2025-07-22"
+            latitude: "40.7128"
+            timezone: America/New_York
+            longitude: "-74.0060"
+            start_date: "2015-01-01"
+            wind_speed_unit: mph
+            temperature_unit: fahrenheit
+            precipitation_unit: inch
+        record_selector:
+          type: RecordSelector
+          extractor:
+            type: DpathExtractor
+            field_path:
+              - daily
+      primary_key:
+        - time
+      schema_loader:
+        type: InlineSchemaLoader
+        schema:
+          $ref: "#/schemas/historical_weather_nyc"
+      transformations:
+        - type: AddFields
+          fields:
+            - type: AddedFieldDefinition
+              path:
+                - state
+              value: NY
+        - type: AddFields
+          fields:
+            - type: AddedFieldDefinition
+              path:
+                - data_type
+              value: "A\r\n"
+  base_requester:
+    type: HttpRequester
+    url_base: https://archive-api.open-meteo.com/v1/archive
+
+streams:
+  - $ref: "#/definitions/streams/historical_weather_nyc"
+
+spec:
+  type: Spec
+  connection_specification:
+    type: object
+    $schema: http://json-schema.org/draft-07/schema#
+    required: []
+    properties: {}
+    additionalProperties: true
+
+metadata:
+  assist: {}
+  testedStreams:
+    historical_weather_nyc:
+      hasRecords: true
+      streamHash: d736c11d14147bf81c294f8f76b9eae60efaa780
+      hasResponse: true
+      primaryKeysAreUnique: true
+      primaryKeysArePresent: true
+      responsesAreSuccessful: true
+  autoImportSchema:
+    historical_weather_nyc: true
+
+schemas:
+  historical_weather_nyc:
+    type: object
+    $schema: http://json-schema.org/schema#
+    required:
+      - time
+    properties:
+      time:
+        type: array
+        items:
+          type:
+            - string
+            - "null"
+      state:
+        type:
+          - string
+          - "null"
+      rain_sum:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - number
+            - "null"
+      data_type:
+        type:
+          - string
+          - "null"
+      snowfall_sum:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - number
+            - "null"
+      weather_code:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - number
+            - "null"
+      precipitation_sum:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - number
+            - "null"
+      temperature_2m_max:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - number
+            - "null"
+      temperature_2m_min:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - number
+            - "null"
+      wind_speed_10m_max:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - number
+            - "null"
+      relative_humidity_2m_max:
+        type:
+          - array
+          - "null"
+        items:
+          type:
+            - number
+            - "null"
+    additionalProperties: true

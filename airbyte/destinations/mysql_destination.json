@@ -1,0 +1,18 @@
+{
+  "name": "MySQL Weather Data",
+  "workspaceId": "943acd38-d48f-49b4-952d-35082e234f34",
+  "definitionId": "ca81ee7c-3163-4246-af40-094cc31e5e42",
+  "configuration": {
+    "ssl": true,
+    "host": "host.docker.internal",
+    "port": 3306,
+    "database": "nyc_weather",
+    "password": "",
+    "username": "root",
+    "tunnel_method": {
+      "tunnel_method": "NO_TUNNEL"
+    },
+    "jdbc_url_params": "serverTimezone=Africa/Cairo",
+    "disable_type_dedupe": false
+  }
+}
