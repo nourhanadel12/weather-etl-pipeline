@@ -23,7 +23,7 @@ These flows rely on external services. You must configure them in your NiFi inst
   - Username: root (adjust as needed)  
   - Driver: `com.mysql.cj.jdbc.Driver`  
 
-- **Record Reader/Writer (if used in the flow):**  
+- **Record Reader/Writer :**  
   - JsonTreeReader or JsonPathReader for parsing API responses.  
   - JsonRecordSetWriter or AvroRecordSetWriter for transformation.  
 
